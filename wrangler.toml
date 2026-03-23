@@ -1,0 +1,8 @@
+name = "slink"
+main = "src/index.ts"
+compatibility_date = "2025-03-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "slink-db"
+database_id = "placeholder-will-be-set-on-deploy"
