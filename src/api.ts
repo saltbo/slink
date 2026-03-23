@@ -64,6 +64,22 @@ api.get("/links/:id", async (c) => {
   return c.json(result);
 });
 
+api.get("/links/:id/stats", async (c) => {
+  const id = c.req.param("id");
+
+  const result = await c.env.DB.prepare(
+    "SELECT id, slug, url, clicks, created_at, updated_at FROM links WHERE id = ?",
+  )
+    .bind(id)
+    .first();
+
+  if (!result) {
+    return c.json({ error: "Not found" }, 404);
+  }
+
+  return c.json(result);
+});
+
 api.delete("/links/:id", async (c) => {
   const id = c.req.param("id");
 
