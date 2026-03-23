@@ -1,10 +1,8 @@
 import { Hono } from "hono";
+import { requireAuth } from "./auth";
+import type { Env } from "./auth";
 
-type Bindings = {
-  DB: D1Database;
-};
-
-const api = new Hono<{ Bindings: Bindings }>();
+const api = new Hono<Env>();
 
 function generateSlug(): string {
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -15,7 +13,11 @@ function generateSlug(): string {
   return slug;
 }
 
+api.use("/links/*", requireAuth);
+api.use("/links", requireAuth);
+
 api.post("/links", async (c) => {
+  const userId = c.get("userId");
   const body = await c.req.json<{ url?: string; slug?: string }>();
 
   if (!body.url || !/^https?:\/\//.test(body.url)) {
@@ -26,9 +28,9 @@ api.post("/links", async (c) => {
 
   try {
     const result = await c.env.DB.prepare(
-      "INSERT INTO links (slug, url) VALUES (?, ?) RETURNING id, slug, url, clicks, created_at",
+      "INSERT INTO links (user_id, slug, url) VALUES (?, ?, ?) RETURNING id, slug, url, clicks, created_at",
     )
-      .bind(slug, body.url)
+      .bind(userId, slug, body.url)
       .first();
 
     return c.json(result, 201);
@@ -41,20 +43,24 @@ api.post("/links", async (c) => {
 });
 
 api.get("/links", async (c) => {
+  const userId = c.get("userId");
   const { results } = await c.env.DB.prepare(
-    "SELECT id, slug, url, clicks, created_at FROM links ORDER BY created_at DESC",
-  ).all();
+    "SELECT id, slug, url, clicks, created_at FROM links WHERE user_id = ? ORDER BY created_at DESC",
+  )
+    .bind(userId)
+    .all();
 
   return c.json({ links: results });
 });
 
 api.get("/links/:id", async (c) => {
+  const userId = c.get("userId");
   const id = c.req.param("id");
 
   const result = await c.env.DB.prepare(
-    "SELECT id, slug, url, clicks, created_at FROM links WHERE id = ?",
+    "SELECT id, slug, url, clicks, created_at FROM links WHERE id = ? AND user_id = ?",
   )
-    .bind(id)
+    .bind(id, userId)
     .first();
 
   if (!result) {
@@ -65,10 +71,13 @@ api.get("/links/:id", async (c) => {
 });
 
 api.delete("/links/:id", async (c) => {
+  const userId = c.get("userId");
   const id = c.req.param("id");
 
-  const result = await c.env.DB.prepare("DELETE FROM links WHERE id = ? RETURNING id")
-    .bind(id)
+  const result = await c.env.DB.prepare(
+    "DELETE FROM links WHERE id = ? AND user_id = ? RETURNING id",
+  )
+    .bind(id, userId)
     .first();
 
   if (!result) {
