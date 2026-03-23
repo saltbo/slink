@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { api } from "./api";
+import { pages } from "./pages";
 import { redirect } from "./redirect";
 
 type Bindings = {
@@ -11,7 +12,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.get("/health", (c) => c.json({ status: "ok" }));
 
 app.route("/api", api);
-// TODO: Mount management page (src/pages.tsx)
+app.route("/", pages);
 app.route("/", redirect);
 
 export default app;
