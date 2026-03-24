@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "product-creator": {
+      "source": "bonaysoft/agent-kanban",
+      "sourceType": "github",
+      "computedHash": "5336c194bcd7cbd9d2c81ece27681cd555b18005a7b6125bea41f02e76065b02"
+    }
+  }
+}
