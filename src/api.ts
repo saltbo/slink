@@ -10,6 +10,7 @@ type Link = {
   slug: string;
   url: string;
   clicks: number;
+  expires_at: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -24,7 +25,7 @@ const api = new Hono<{ Bindings: Bindings }>();
 
 // POST /links — Create a short link
 api.post("/links", async (c) => {
-  const body = await c.req.json<{ url?: string; slug?: string }>();
+  const body = await c.req.json<{ url?: string; slug?: string; expires_at?: string | null }>();
 
   if (!body.url || !isValidUrl(body.url)) {
     return c.json({ error: "Invalid or missing url" }, 400);
@@ -36,8 +37,12 @@ api.post("/links", async (c) => {
     return c.json({ error: "Slug must be 3-32 alphanumeric or hyphen characters" }, 400);
   }
 
-  const result = await c.env.DB.prepare("INSERT INTO links (slug, url) VALUES (?, ?) RETURNING *")
-    .bind(slug, body.url)
+  const expiresAt = body.expires_at ?? null;
+
+  const result = await c.env.DB.prepare(
+    "INSERT INTO links (slug, url, expires_at) VALUES (?, ?, ?) RETURNING *"
+  )
+    .bind(slug, body.url, expiresAt)
     .first<Link>();
 
   if (!result) {
@@ -68,6 +73,28 @@ api.get("/links", async (c) => {
     total: countResult?.total ?? 0,
     page,
     per_page: perPage,
+  });
+});
+
+// GET /links/:id/stats — Link statistics
+api.get("/links/:id/stats", async (c) => {
+  const id = Number(c.req.param("id"));
+  const link = await c.env.DB.prepare("SELECT * FROM links WHERE id = ?").bind(id).first<Link>();
+
+  if (!link) {
+    return c.json({ error: "Not found" }, 404);
+  }
+
+  const isExpired = link.expires_at !== null && link.expires_at <= new Date().toISOString();
+
+  return c.json({
+    id: link.id,
+    slug: link.slug,
+    url: link.url,
+    clicks: link.clicks,
+    created_at: link.created_at,
+    expires_at: link.expires_at,
+    is_expired: isExpired,
   });
 });
 

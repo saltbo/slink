@@ -13,12 +13,16 @@ redirect.get("/:slug", async (c) => {
     return c.notFound();
   }
 
-  const link = await c.env.DB.prepare("SELECT url FROM links WHERE slug = ?")
+  const link = await c.env.DB.prepare("SELECT url, expires_at FROM links WHERE slug = ?")
     .bind(slug)
-    .first<{ url: string }>();
+    .first<{ url: string; expires_at: string | null }>();
 
   if (!link) {
     return c.json({ error: "Link not found" }, 404);
+  }
+
+  if (link.expires_at && link.expires_at <= new Date().toISOString()) {
+    return c.json({ error: "This link has expired" }, 410);
   }
 
   c.executionCtx.waitUntil(
