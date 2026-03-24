@@ -9,6 +9,10 @@ const redirect = new Hono<{ Bindings: Bindings }>();
 redirect.get("/:slug", async (c) => {
   const slug = c.req.param("slug");
 
+  if (!slug) {
+    return c.notFound();
+  }
+
   const link = await c.env.DB.prepare("SELECT url FROM links WHERE slug = ?")
     .bind(slug)
     .first<{ url: string }>();
