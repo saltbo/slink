@@ -5,14 +5,24 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "db:migrate": "wrangler d1 execute slink-db --local --file=schema.sql"
+    "db:migrate": "wrangler d1 execute slink-db --local --file=schema.sql",
+    "lint": "eslint src/",
+    "format": "prettier --check src/",
+    "format:fix": "prettier --write src/",
+    "typecheck": "tsc --noEmit",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "hono": "^4.12.9"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260317.1",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "lefthook": "^2.1.4",
+    "prettier": "^3.8.1",
     "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2",
     "wrangler": "^4.76.0"
   }
 }
