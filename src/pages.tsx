@@ -41,7 +41,8 @@ export function DashboardPage(): HtmlEscapedString {
             flex-wrap: wrap;
           }
           input[type="text"],
-          input[type="url"] {
+          input[type="url"],
+          input[type="datetime-local"] {
             padding: 0.5rem 0.75rem;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -58,6 +59,10 @@ export function DashboardPage(): HtmlEscapedString {
           .input-slug {
             flex: 1;
             min-width: 120px;
+          }
+          .input-expires {
+            flex: 1;
+            min-width: 160px;
           }
           button {
             padding: 0.5rem 1rem;
@@ -126,6 +131,10 @@ export function DashboardPage(): HtmlEscapedString {
           .clicks {
             text-align: center;
           }
+          .expired {
+            color: #dc2626;
+            font-weight: 600;
+          }
           .pagination {
             display: flex;
             gap: 0.5rem;
@@ -172,6 +181,7 @@ export function DashboardPage(): HtmlEscapedString {
               required
             />
             <input class="input-slug" type="text" name="slug" placeholder="custom-slug" />
+            <input class="input-expires" type="datetime-local" name="expires_at" />
             <button type="submit" class="btn-primary">Shorten</button>
           </form>
           <div id="create-message" class="message"></div>
@@ -183,6 +193,7 @@ export function DashboardPage(): HtmlEscapedString {
               <th>Short URL</th>
               <th>Target URL</th>
               <th class="clicks">Clicks</th>
+              <th class="hide-mobile">Expires</th>
               <th class="hide-mobile">Created</th>
               <th>Actions</th>
             </tr>
@@ -222,6 +233,13 @@ export function DashboardPage(): HtmlEscapedString {
             return new Date(iso).toLocaleDateString();
           }
 
+          function formatExpiry(expiresAt) {
+            if (!expiresAt) return "Never";
+            var now = new Date().toISOString();
+            if (expiresAt <= now) return '<span class="expired">Expired</span>';
+            return formatDate(expiresAt);
+          }
+
           function renderLinks(links) {
             tbody.innerHTML = "";
             if (links.length === 0) {
@@ -246,6 +264,9 @@ export function DashboardPage(): HtmlEscapedString {
                 "</td>" +
                 '<td class="clicks">' +
                 link.clicks +
+                "</td>" +
+                '<td class="hide-mobile">' +
+                formatExpiry(link.expires_at) +
                 "</td>" +
                 '<td class="hide-mobile">' +
                 formatDate(link.created_at) +
@@ -280,8 +301,10 @@ export function DashboardPage(): HtmlEscapedString {
             e.preventDefault();
             var urlVal = form.url.value.trim();
             var slugVal = form.slug.value.trim();
+            var expiresVal = form.expires_at.value;
             var body = { url: urlVal };
             if (slugVal) body.slug = slugVal;
+            if (expiresVal) body.expires_at = new Date(expiresVal).toISOString();
 
             msg.innerHTML = "";
             msg.className = "message";
