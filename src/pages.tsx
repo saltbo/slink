@@ -559,15 +559,16 @@ export function StatsPage(): HtmlEscapedString {
                 data.clicks +
                 "</div></div>" +
                 '<div class="actions">' +
-                '<button class="btn-primary" onclick="copyShortUrl('' +
+                '<button class="btn-primary" onclick="copyShortUrl(\\'' +
                 shortUrl +
-                "')">" +
+                "')\\">" +
                 "Copy Short URL</button>" +
                 '<a class="back-link" href="/">Back to Dashboard</a>' +
                 "</div>";
             })
             .catch(function () {
-              content.innerHTML = '<div class="error-msg">Link not found.</div>' +
+              content.innerHTML =
+                '<div class="error-msg">Link not found.</div>' +
                 '<div class="actions" style="justify-content:center">' +
                 '<a class="back-link" href="/">Back to Dashboard</a></div>';
             });
