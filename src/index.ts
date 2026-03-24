@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import api from "./api";
-import { DashboardPage } from "./pages";
+import { DashboardPage, StatsPage } from "./pages";
 import redirect from "./redirect";
 
 type Bindings = {
@@ -14,6 +14,8 @@ app.get("/health", (c) => c.json({ status: "ok" }));
 app.route("/api", api);
 
 app.get("/", (c) => c.html(DashboardPage()));
+
+app.get("/stats/:id", (c) => c.html(StatsPage()));
 
 app.route("/", redirect);
 
