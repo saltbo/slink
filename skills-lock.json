@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "agent-kanban": {
+      "source": "saltbo/agent-kanban",
+      "sourceType": "github",
+      "computedHash": "8fdd6d0fe3900c70de41ae2589b59a09f541cdf34f35a54176a78d4b5041afd3"
+    },
     "product-creator": {
       "source": "bonaysoft/agent-kanban",
       "sourceType": "github",
