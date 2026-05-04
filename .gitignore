@@ -2,3 +2,13 @@ node_modules/
 dist/
 .wrangler/
 .dev.vars
+
+# agent skills (managed by daemon)
+.claude/skills/
+.agents/
+skills-lock.json
+
+# agent definitions (managed by daemon)
+.claude/agents/
+.codex/agents/
+.gemini/agents/
