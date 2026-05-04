@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "agent-kanban": {
+      "source": "/Users/saltbo/Develop/bogit/agent-kanban",
+      "sourceType": "local",
+      "computedHash": "fdb5622e07614282a23c07a60f8c611c9467973495e2a31cb00e4b77c544d2d4"
+    },
     "product-creator": {
       "source": "bonaysoft/agent-kanban",
       "sourceType": "github",
