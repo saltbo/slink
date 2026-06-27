@@ -1,9 +1,6 @@
 import { Hono } from "hono";
 import { nanoid } from "nanoid";
-
-type Bindings = {
-  DB: D1Database;
-};
+import type { AppEnv } from "./types";
 
 type Link = {
   id: number;
@@ -21,7 +18,7 @@ function isValidUrl(url: string): boolean {
   return url.startsWith("http://") || url.startsWith("https://");
 }
 
-const api = new Hono<{ Bindings: Bindings }>();
+const api = new Hono<AppEnv>();
 
 // POST /links — Create a short link
 api.post("/links", async (c) => {
@@ -40,7 +37,7 @@ api.post("/links", async (c) => {
   const expiresAt = body.expires_at ?? null;
 
   const result = await c.env.DB.prepare(
-    "INSERT INTO links (slug, url, expires_at) VALUES (?, ?, ?) RETURNING *"
+    "INSERT INTO links (slug, url, expires_at) VALUES (?, ?, ?) ON CONFLICT(slug) DO NOTHING RETURNING *"
   )
     .bind(slug, body.url, expiresAt)
     .first<Link>();
@@ -138,20 +135,15 @@ api.put("/links/:id", async (c) => {
   const newUrl = body.url ?? existing.url;
   const newSlug = body.slug ?? existing.slug;
 
-  if (body.slug && body.slug !== existing.slug) {
-    const conflict = await c.env.DB.prepare("SELECT id FROM links WHERE slug = ?")
-      .bind(body.slug)
-      .first();
-    if (conflict) {
-      return c.json({ error: "Slug already exists" }, 409);
-    }
-  }
-
   const updated = await c.env.DB.prepare(
-    "UPDATE links SET url = ?, slug = ?, updated_at = datetime('now') WHERE id = ? RETURNING *"
+    "UPDATE OR IGNORE links SET url = ?, slug = ?, updated_at = datetime('now') WHERE id = ? RETURNING *"
   )
     .bind(newUrl, newSlug, id)
     .first<Link>();
+
+  if (!updated) {
+    return c.json({ error: "Slug already exists" }, 409);
+  }
 
   return c.json(updated);
 });
