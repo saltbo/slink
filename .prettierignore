@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.wrangler/
+.tmp/
+.ama/
+playwright-report/
+test-results/
+src/worker-configuration.d.ts

@@ -1,10 +1,7 @@
 import { Hono } from "hono";
+import type { AppEnv } from "./types";
 
-type Bindings = {
-  DB: D1Database;
-};
-
-const redirect = new Hono<{ Bindings: Bindings }>();
+const redirect = new Hono<AppEnv>();
 
 redirect.get("/:slug", async (c) => {
   const slug = c.req.param("slug");

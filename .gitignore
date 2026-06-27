@@ -1,4 +1,17 @@
 node_modules/
 dist/
+coverage/
 .wrangler/
+.tmp/
+.ama/
 .dev.vars
+playwright-report/
+test-results/
+
+# agent skills (managed by AMA runner)
+.claude/skills/
+.agents/
+skills-lock.json
+
+# agent definitions (managed by AMA runner)
+.codex/agents/

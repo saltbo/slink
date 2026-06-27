@@ -2,12 +2,9 @@ import { Hono } from "hono";
 import api from "./api";
 import { DashboardPage, StatsPage } from "./pages";
 import redirect from "./redirect";
+import type { AppEnv } from "./types";
 
-type Bindings = {
-  DB: D1Database;
-};
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<AppEnv>();
 
 app.get("/health", (c) => c.json({ status: "ok" }));
 

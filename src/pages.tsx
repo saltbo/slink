@@ -559,12 +559,15 @@ export function StatsPage(): HtmlEscapedString {
                 data.clicks +
                 "</div></div>" +
                 '<div class="actions">' +
-                '<button class="btn-primary" onclick="copyShortUrl(\\'' +
-                shortUrl +
-                "')\\">" +
-                "Copy Short URL</button>" +
+                '<button id="copy-short-url" class="btn-primary">Copy Short URL</button>' +
                 '<a class="back-link" href="/">Back to Dashboard</a>' +
                 "</div>";
+              var copyButton = document.getElementById("copy-short-url");
+              if (copyButton) {
+                copyButton.addEventListener("click", function () {
+                  copyShortUrl(shortUrl);
+                });
+              }
             })
             .catch(function () {
               content.innerHTML =
