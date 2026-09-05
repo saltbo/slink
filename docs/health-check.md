@@ -19,6 +19,9 @@ npm run dev
 
 By default, Wrangler serves this project at `http://localhost:8787`.
 
+For the standard local checks contributors should run before committing, see
+[README Checks](../README.md#checks).
+
 ## Request
 
 ```bash
