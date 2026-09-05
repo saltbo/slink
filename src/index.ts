@@ -9,7 +9,10 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.get("/health", (c) => c.json({ status: "ok", service: "slink" }));
+app.get("/health", (c) => {
+  c.header("Cache-Control", "no-store");
+  return c.json({ status: "ok", service: "slink" });
+});
 
 app.route("/api", api);
 
