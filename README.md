@@ -24,6 +24,15 @@ Run the local D1 schema migration when the links table needs to be created:
 npm run db:migrate
 ```
 
+## Checks
+
+Run these checks before committing changes:
+
+```bash
+npm run lint
+npm run typecheck
+```
+
 ## Health Check
 
 See [docs/health-check.md](docs/health-check.md) for the local health check
