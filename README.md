@@ -41,6 +41,9 @@ These checks only require dependencies installed with `npm ci --legacy-peer-deps
 They do not require the local D1 migration, Cloudflare login, or production
 secrets.
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the pull request checklist and CI
+inspection commands.
+
 ## Health Check
 
 See [docs/health-check.md](docs/health-check.md) for the local health check
