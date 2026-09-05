@@ -27,13 +27,19 @@ npm run db:migrate
 
 ## Checks
 
-GitHub Actions runs the same checks on pull requests and on pushes to `main`.
-Run them locally before committing changes:
+GitHub Actions runs the
+[CI workflow](https://github.com/saltbo/slink/actions/workflows/ci.yml) on pull
+requests and on pushes to `main`. Run the same checks locally before committing
+changes:
 
 ```bash
 npm run lint
 npm run typecheck
 ```
+
+These checks only require dependencies installed with `npm ci --legacy-peer-deps`.
+They do not require the local D1 migration, Cloudflare login, or production
+secrets.
 
 ## Health Check
 
