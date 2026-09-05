@@ -6,7 +6,8 @@ redirects, per-link stats, and a lightweight `/health` endpoint.
 
 ## Local Development
 
-Install dependencies:
+Use Node.js 24 and npm. Install from the committed lockfile so local
+dependencies match CI:
 
 ```bash
 npm ci --legacy-peer-deps
@@ -26,12 +27,19 @@ npm run db:migrate
 
 ## Checks
 
-Run these checks before committing changes:
+GitHub Actions runs the
+[CI workflow](https://github.com/saltbo/slink/actions/workflows/ci.yml) on pull
+requests and on pushes to `main`. Run the same checks locally before committing
+changes:
 
 ```bash
 npm run lint
 npm run typecheck
 ```
+
+These checks only require dependencies installed with `npm ci --legacy-peer-deps`.
+They do not require the local D1 migration, Cloudflare login, or production
+secrets.
 
 ## Health Check
 
