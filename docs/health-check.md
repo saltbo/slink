@@ -3,6 +3,11 @@
 The local health check endpoint confirms that the Worker process is serving
 requests. It is intentionally lightweight and does not query the D1 database.
 
+## Scope
+
+`/health` checks that the Worker can serve requests. It does not query D1 or
+prove database readiness.
+
 ## Start Locally
 
 Install dependencies, then start Wrangler's local development server:
