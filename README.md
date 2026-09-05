@@ -6,7 +6,8 @@ redirects, per-link stats, and a lightweight `/health` endpoint.
 
 ## Local Development
 
-Install dependencies:
+Use Node.js 24 and npm. Install from the committed lockfile so local
+dependencies match CI:
 
 ```bash
 npm ci --legacy-peer-deps
@@ -26,7 +27,8 @@ npm run db:migrate
 
 ## Checks
 
-Run these checks before committing changes:
+GitHub Actions runs the same checks on pull requests and on pushes to `main`.
+Run them locally before committing changes:
 
 ```bash
 npm run lint
