@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a reproducible problem in slink. Please review CONTRIBUTING.md before opening.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Concisely describe the problem and its impact.
+      placeholder: Short description of what went wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: List the exact steps needed to reproduce the problem.
+      placeholder: |
+        1. Start from...
+        2. Run or open...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe what should happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Describe what happens instead, including any error output.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and version
+      description: Include the slink version or commit, Node.js version, OS, browser or client, and deployment target if relevant.
+      placeholder: |
+        - slink version or commit:
+        - Node.js:
+        - OS:
+        - Browser/client:
+        - Deployment target:
+    validations:
+      required: true
